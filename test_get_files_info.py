@@ -9,8 +9,8 @@ test_tuples = (
 
 
 if __name__ == "__main__":
-    for tup in test_tuples:
+    for p_dir, dir in test_tuples:
         print(f"Result for " \
-            f"{'current' if tup[1] == "." else "'" + tup[1] + "'"} " \
+            f"{'current' if dir == "." else "'" + dir + "'"} " \
             f"directory:\n" \
-            f"{get_files_info(tup[0], tup[1])}")
+            f"{get_files_info(p_dir, dir)}")

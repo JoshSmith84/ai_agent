@@ -12,20 +12,18 @@ def get_files_info(working_directory: str, directory=".") -> str:
     """
 
 
-    validated_path = validate_path(working_directory, directory)
+    validated_path, fail_check = validate_path(working_directory, directory)
 
-    if validated_path[1] == 1:
+    if fail_check == 1:
         return f'Error: Cannot list "{directory}" as it is ' \
                 'outside the permitted working directory' 
 
-    target_dir = validated_path[0]     
-
-    if os.path.isdir(target_dir) == False:
-        return f'Error: "{target_dir}" is not a directory'
+    if os.path.isdir(validated_path) == False:
+        return f'Error: "{validated_path}" is not a directory'
     
     content_string = ''
-    for i in os.listdir(target_dir):
-        abs_i = '/'.join([target_dir, i])
+    for i in os.listdir(validated_path):
+        abs_i = '/'.join([validated_path, i])
         try:
             current_i_size = os.path.getsize(abs_i)
         except:

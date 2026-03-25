@@ -11,18 +11,16 @@ def get_file_content(working_directory: str, file_path: str) -> str:
     :return: A string of file contents if readable
     """
         
-    validated_path = validate_path(working_directory, file_path)            
+    validated_path, fail_check = validate_path(working_directory, file_path)            
 
-    if validated_path[1] == 1:
+    if fail_check == 1:
         return f'Error: Cannot read "{file_path}" as it is ' \
-                'outside the permitted working directory' 
-
-    full_file_path = validated_path[0]       
+                'outside the permitted working directory'     
     
-    if os.path.isfile(full_file_path) == False:
+    if os.path.isfile(validated_path) == False:
             return f'Error: File not found or is not a regular file: "{file_path}"'
     
-    with open(full_file_path, 'r') as file:
+    with open(validated_path, 'r') as file:
         contents = file.read(MAX_CHARS)
 
         if file.read(1):

@@ -12,9 +12,9 @@ test_tuples = (
 
 
 if __name__ == "__main__":
-    for tup in test_tuples:
-        output = get_file_content(tup[0], tup[1])
-        print(f"\nTesting: {tup[1]}.. \nCharacters read: {len(output)}")
+    for dir, file in test_tuples:
+        output = get_file_content(dir, file)
+        print(f"\nTesting: {file}.. \nCharacters read: {len(output)}")
         print(output)
 
         if len(output) > MAX_CHARS:

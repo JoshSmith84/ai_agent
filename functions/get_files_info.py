@@ -12,7 +12,9 @@ def get_files_info(working_directory: str, directory=".") -> str:
     """
 
 
-    validated_path, fail_check = validate_path(working_directory, directory)
+    validated_path, workdir_abs, fail_check = validate_path(
+        working_directory, directory
+        )
 
     if fail_check == 1:
         return f'Error: Cannot list "{directory}" as it is ' \

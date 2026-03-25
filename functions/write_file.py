@@ -9,7 +9,9 @@ def write_file(working_directory: str, file_path: str, content: str) -> str:
     :param file_path: The realtive path of the target
     :return: Completion status as a string"""
     
-    validated_path, fail_check = validate_path(working_directory, file_path)
+    validated_path, working_dir_abs, fail_check = validate_path(
+        working_directory, file_path
+        )
 
     if fail_check == 1:
         return f'Error: Cannot write to "{file_path}" '  \
@@ -19,7 +21,6 @@ def write_file(working_directory: str, file_path: str, content: str) -> str:
         return f'Error: Cannot write to "{file_path}" ' \
                 'as it is a directory'
     
-    working_dir_abs = os.path.abspath(working_directory)
     os.makedirs(working_dir_abs, exist_ok=True)
 
     try:

@@ -6,6 +6,7 @@ test_tuples = (
     ("calculator", "pkg/morelorem.txt", "lorem ipsum dolor sit amet"),
     ("calculator", "/tmp/temp.txt", "this should not be allowed"),
 )
+
 if __name__ == "__main__":
     for dir, file, content in test_tuples:
         status = write_file(dir, file, content)

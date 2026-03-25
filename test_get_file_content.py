@@ -17,6 +17,6 @@ if __name__ == "__main__":
         print(f"\nTesting: {tup[1]}.. \nCharacters read: {len(output)}")
         print(output)
 
-        if len(output) >= MAX_CHARS:
+        if len(output) > MAX_CHARS:
             trunc_message_index = len(output) - MAX_CHARS
             print(f"{output[-trunc_message_index:]}")

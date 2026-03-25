@@ -1,23 +1,28 @@
 import os
+from functions.validate_path import validate_path
 
 
-def get_files_info(working_directory, directory="."):
-
-    working_dir_abs = os.path.abspath(working_directory)
-    target_dir = os.path.normpath(
-        os.path.join(working_dir_abs, directory)
-        )
+def get_files_info(working_directory: str, directory=".") -> str:
+    """Get info on all files in a directory
     
-    if os.path.commonpath(
-        [working_dir_abs, target_dir]
-        ) != working_dir_abs:
+    :param working_directory: parent directory
+    :param directory: Folder to search
+    "return: String containing file/folder names, size, 
+    and if it is a directory. Formatted neatly
+    """
+
+
+    validated_path = validate_path(working_directory, directory)
+
+    if validated_path[1] == 1:
         return f'Error: Cannot list "{directory}" as it is ' \
-                'outside the permitted working directory'
-            
+                'outside the permitted working directory' 
+
+    target_dir = validated_path[0]     
+
     if os.path.isdir(target_dir) == False:
         return f'Error: "{target_dir}" is not a directory'
     
-
     content_string = ''
     for i in os.listdir(target_dir):
         abs_i = '/'.join([target_dir, i])

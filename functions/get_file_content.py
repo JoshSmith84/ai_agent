@@ -1,17 +1,23 @@
 import os
 from config import *
+from functions.validate_path import validate_path
 
 
-def get_file_content(working_directory, file_path):
+def get_file_content(working_directory: str, file_path: str) -> str:
+    """Read contents of a file truncated to MAX_CHARS config variable
+    
+    :param working_directory: Working Directory where the target file resides
+    :param file_path: The filename to open (realtive path)
+    :return: A string of file contents if readable
+    """
         
-    working_dir_abs = os.path.abspath(working_directory)    
-    full_file_path = '/'.join([working_dir_abs, file_path])    
+    validated_path = validate_path(working_directory, file_path)            
 
-    if os.path.commonpath([working_dir_abs, 
-                            full_file_path,
-                            ]) != working_dir_abs:
+    if validated_path[1] == 1:
         return f'Error: Cannot read "{file_path}" as it is ' \
-                'outside the permitted working directory'
+                'outside the permitted working directory' 
+
+    full_file_path = validated_path[0]       
     
     if os.path.isfile(full_file_path) == False:
             return f'Error: File not found or is not a regular file: "{file_path}"'

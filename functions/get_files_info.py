@@ -17,7 +17,7 @@ def get_files_info(working_directory, directory="."):
     if os.path.isdir(target_dir) == False:
         return f'Error: "{target_dir}" is not a directory'
     
-    print(target_dir)
+
     content_string = ''
     for i in os.listdir(target_dir):
         abs_i = '/'.join([target_dir, i])

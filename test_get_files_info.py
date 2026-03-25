@@ -7,8 +7,10 @@ test_tuples = (
     ("calculator", "../"),
 )
 
-for tup in test_tuples:
-    print(f"Result for " \
-          f"{'current' if tup[1] == "." else "'" + tup[1] + "'"} " \
-          f"directory:\n" \
-          f"{get_files_info(tup[0], tup[1])}")
+
+if __name__ == "__main__":
+    for tup in test_tuples:
+        print(f"Result for " \
+            f"{'current' if tup[1] == "." else "'" + tup[1] + "'"} " \
+            f"directory:\n" \
+            f"{get_files_info(tup[0], tup[1])}")

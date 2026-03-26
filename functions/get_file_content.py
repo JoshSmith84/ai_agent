@@ -44,8 +44,8 @@ def get_file_content(working_directory: str, file_path: str) -> str:
         with open(validated_path, 'r') as file:
             contents = file.read(MAX_CHARS)
 
-        if file.read(1):
-            contents += f'[...File "{file_path}" truncated at {MAX_CHARS} characters]'
+            if file.read(1):
+                contents += f'[...File "{file_path}" truncated at {MAX_CHARS} characters]'
     except Exception as e:
          return f"Error: {e}" 
     

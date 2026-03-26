@@ -12,10 +12,15 @@ schema_write_file= types.FunctionDeclaration(
         properties={
             "file_path": types.Schema(
                 type=types.Type.STRING,
-                description="Filename to write to.",
+                description="Filename to write 'content' to.",
             ),
+            "content": types.Schema(
+                type=types.Type.STRING,
+                description="A string to write to 'file_path'"
+            )
         },
-    ),
+        required=["file_path", "content"],
+    )
 )
 
 def write_file(working_directory: str, file_path: str, content: str) -> str:

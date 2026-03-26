@@ -1,10 +1,9 @@
 import os
+import sys
 import argparse
 from dotenv import load_dotenv
-from google import genai
-from google.genai import types
-from prompts import system_prompt
-from call_function import available_functions, call_function
+from call_gemini import call_gemini
+
 
 
 if __name__ == "__main__":
@@ -20,55 +19,30 @@ if __name__ == "__main__":
                         )
     args = parser.parse_args()
 
-    messages = [
-        types.Content(role="user", 
-                      parts=[types.Part(text=args.ai_prompt)]
-                      )
-        ]
-
     load_dotenv()
     api_key = os.environ.get("GEMINI_API_KEY")
+    max_iterations = int(os.environ.get("MAX_ITER"))
     if api_key == None:
         raise RuntimeError("api key not found!")
     
-    client = genai.Client(api_key=api_key)
+    messages = []
+    i = 0
+    for i in range(max_iterations):
+        i += 1
+        response_text, messages_out, done = call_gemini(api_key,args,messages)
+        messages.extend(messages_out)
+        args = messages
 
-    response = client.models.generate_content(
-        model='gemini-2.5-flash', 
-        contents=messages,
-        config=types.GenerateContentConfig(
-            tools=[available_functions],
-            system_instruction=system_prompt,
-            temperature=0,
-            )
-    )
-    if response.usage_metadata == None:
-        raise RuntimeError("Failed to fetch usage metadata. " \
-                           "API call most likely failed"
-                           )
+        if i >= max_iterations:
+            sys.exit(f"""Error: Maximum iterations ({max_iterations} reached
+                     with no resolution. Exiting...)""")
+        if done == 0:
+            continue
+        else:
+            break
 
-    if args.verbose:
-        print(f"\nUser prompt: {args.ai_prompt}\n"
-              f"Prompt tokens: {response.usage_metadata.prompt_token_count}\n"
-              f"Response tokens: {response.usage_metadata.candidates_token_count}\n"
-              )   
-
-    function_call_result_list = []
-    if response.function_calls:
-        for call in response.function_calls:
-            function_call_result = call_function(call)
-
-            if function_call_result.parts == None:
-                raise Exception(f"Error: {call.name} .parts are empty")
-            if function_call_result.parts[0].function_response == None:
-                raise Exception(f"Error: {call.name}'s FunctionResponse returned empty")
-            if function_call_result.parts[0].function_response.response == None:
-                raise Exception(f"Error: {call.name}'s actual call result retuirned empty")
-            
-            if args.verbose:
-                print(f"-> {function_call_result.parts[0].function_response.response}") 
-
-            function_call_result_list.append(function_call_result.parts[0])
-    else:
-        print(response.text)
+    print(response_text)
+    print(f"iterations taken: {i}")
+    sys.exit()
+ 
 

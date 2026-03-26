@@ -1,6 +1,22 @@
 import os
+from google import genai
+from google.genai import types
 from functions.validate_path import validate_path
 
+
+schema_write_file= types.FunctionDeclaration(
+    name="write_file",
+    description="Open and write contents to a file in the working directory, returning amount of characters written if successful.",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "file_path": types.Schema(
+                type=types.Type.STRING,
+                description="Filename to write to.",
+            ),
+        },
+    ),
+)
 
 def write_file(working_directory: str, file_path: str, content: str) -> str:
     """Function to (over)-write contents to file

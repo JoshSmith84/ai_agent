@@ -1,6 +1,23 @@
 import os
 import subprocess
+from google import genai
+from google.genai import types
 from functions.validate_path import validate_path
+
+
+schema_run_python_file= types.FunctionDeclaration(
+    name="run_python_file",
+    description="Execute a python file in the working directory, returning the exit code and any standard/error output as a string",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "file_path": types.Schema(
+                type=types.Type.STRING,
+                description="Python filename to to run.",
+            ),
+        },
+    ),
+)
 
 
 def run_python_file(working_directory: str, file_path: str, args=None) -> str:

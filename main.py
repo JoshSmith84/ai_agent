@@ -3,6 +3,8 @@ import argparse
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
+from prompts import system_prompt
+from call_function import available_functions
 
 
 if __name__ == "__main__":
@@ -33,7 +35,12 @@ if __name__ == "__main__":
 
     response = client.models.generate_content(
         model='gemini-2.5-flash', 
-        contents=messages
+        contents=messages,
+        config=types.GenerateContentConfig(
+            tools=[available_functions],
+            system_instruction=system_prompt,
+            temperature=0,
+            )
     )
     if response.usage_metadata == None:
         raise RuntimeError("Failed to fetch usage metadata. " \
@@ -46,4 +53,9 @@ if __name__ == "__main__":
               f"Response tokens: {response.usage_metadata.candidates_token_count}\n"
               )   
 
-    print(response.text)
+    if response.function_calls:
+        for call in response.function_calls:
+            print(f"Calling function: {call.name}({call.args})")
+    else:
+        print(response.text)
+

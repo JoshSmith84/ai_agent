@@ -1,6 +1,23 @@
 import os
+from google import genai
+from google.genai import types
 from config import *
 from functions.validate_path import validate_path
+
+
+schema_get_file_content= types.FunctionDeclaration(
+    name="get_file_content",
+    description="Open and read contents of a file in the working directory, returning the output as a string",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "file_path": types.Schema(
+                type=types.Type.STRING,
+                description="Filename of contents to read.",
+            ),
+        },
+    ),
+)
 
 
 def get_file_content(working_directory: str, file_path: str) -> str:
